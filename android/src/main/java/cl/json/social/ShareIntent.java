@@ -160,6 +160,14 @@ public abstract class ShareIntent {
                 if (!TextUtils.isEmpty(message)) {
                     this.getIntent().putExtra(Intent.EXTRA_TEXT, message);
                 }
+                for (Uri myUri: uriFile) {
+                  List<ResolveInfo> resInfoList = this.reactContext.getPackageManager().queryIntentActivities(this.getIntent(), PackageManager.MATCH_DEFAULT_ONLY);
+
+                  for (ResolveInfo resolveInfo : resInfoList) {
+                    String packageName = resolveInfo.activityInfo.packageName;
+                    this.reactContext.grantUriPermission(packageName, myUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                  }
+                }
             } else {
                 if (!TextUtils.isEmpty(message)) {
                     this.getIntent().putExtra(Intent.EXTRA_TEXT, message + " " + options.getArray("urls").getString(0));
@@ -176,6 +184,12 @@ public abstract class ShareIntent {
                 this.getIntent().addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 if (!TextUtils.isEmpty(message)) {
                     this.getIntent().putExtra(Intent.EXTRA_TEXT, message);
+                }
+                List<ResolveInfo> resInfoList = this.reactContext.getPackageManager().queryIntentActivities(this.getIntent(), PackageManager.MATCH_DEFAULT_ONLY);
+
+                for (ResolveInfo resolveInfo : resInfoList) {
+                  String packageName = resolveInfo.activityInfo.packageName;
+                  this.reactContext.grantUriPermission(packageName, uriFile, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
             } else {
                 if (!TextUtils.isEmpty(message)) {
